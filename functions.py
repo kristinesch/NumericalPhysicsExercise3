@@ -14,6 +14,7 @@ def makeLandR(N,dt,dz,K,kw):
     R[0,1]=2*alpha*K[0]
     #all rows except first and last
     for i in range(1,N-2):
+        print(i)
         R[i,i-1]= -(alpha/4)*(K[i+1]-K[i-1])+alpha*K[i]
         R[i,i]=1-2*alpha*K[i]
         R[i,i+1]=(alpha/4)*(K[i+1]-K[i-1])+alpha*K[i]
@@ -23,4 +24,17 @@ def makeLandR(N,dt,dz,K,kw):
 
     #L 
     L=-R #RIGHT????
-    return R,L
+    return L,R
+
+def nextC(Ci,L,R,Si,Snext):
+    V=np.dot(R,Ci)+0.5*(Si+Snext)
+    return np.linalg.solve(L,V)
+
+def runSimulation(Cinit,dt,dz,K,kw,timesteps,S):
+    N=len(Cinit)
+    L,R=makeLandR(N,dt,dz,K,kw)
+    C=np.zeros((timesteps,N))
+    C[0]=Cinit
+    for i in range(1,timesteps):
+        C[i+1]=nextC(C[i],L,R,S[i],S[i+1])
+    return C
