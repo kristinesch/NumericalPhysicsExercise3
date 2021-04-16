@@ -32,9 +32,6 @@ def makeLandR(N,dt,dz,K,kw): #K has length N, indeces (0,1,2,3,..,N-1)
 
 def nextC(Ci,L,R,Si,Snext):
     V=R@Ci+0.5*(Si+Snext)
-    #print(Ci)
-    #print(R,Ci,R@Ci)
-    #print(np.linalg.solve(L,V))
     return np.linalg.solve(L,V)
 
 def runSimulation(Cinit,dt,dz,K,kw,timesteps,S):
@@ -47,4 +44,11 @@ def runSimulation(Cinit,dt,dz,K,kw,timesteps,S):
     for i in range(timesteps-1):
         #print(C[i])
         C[i+1]=nextC(C[i],L,R,S[i],S[i+1])
-    return C
+        print(i/timesteps)
+    return np.array(C)
+
+
+def massDifference(C): #C is the array returned after simulation
+    mass=np.sum(C,axis=1)
+    initMass=mass[0]
+    return mass-initMass #returns difference between initial mass and current mass for all timesteps
