@@ -1,13 +1,26 @@
 from functions import *
+from plotting import *
 
-N=5
-kw=0.0000697
-K=[1,1,1,1,1,1]
+def test1(N,dt,dz,timesteps):
+    K=np.linspace(1,10,N)
+
+    #initialize C
+    C1init=np.zeros(N)
+    C1init.fill(1)
+    print("Cinit",C1init)
+
+    S=np.zeros((timesteps,N))
+
+    C=runSimulation(C1init,dt,dz,K,kw,timesteps,S)
+    print(C)
+    np.save("Ctest1",C)
+    plotConcentrations("Ctest1.npy","test1")
+
+N=100
+kw=0
 dt=0.01
 dz=0.01
-Cinit=[1,1,1,1,1,1]
-timesteps=50
-S=np.zeros((timesteps,N+1))
+timesteps=100
 
-C=runSimulation(Cinit,dt,dz,K,kw,timesteps,S)
-print(C)
+test1(N,dt,dz,timesteps)
+
