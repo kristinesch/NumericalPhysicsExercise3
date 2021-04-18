@@ -1,11 +1,12 @@
 import numpy as np
+from numba import jit
+
 
 
 """Thomas algorithm"""
-def tdma(A,d): #from jupyter notebook on linear algebra https://github.com/nordam/ComputationalPhysics/blob/master/Notebooks/10%20-%20Linear%20Algebra.ipynb
-    a=A.diagonal(-1)
-    b=A.diagonal(0)
-    c=A.diagonal(1)
+@jit(nopython = True)
+def tdma_solver(a,b,c,d): #from jupyter notebook on linear algebra https://github.com/nordam/ComputationalPhysics/blob/master/Notebooks/10%20-%20Linear%20Algebra.ipynb
+
     N=len(d)
     c_temp = np.zeros(N-1)
     d_temp = np.zeros(N)
@@ -30,7 +31,11 @@ def tdma(A,d): #from jupyter notebook on linear algebra https://github.com/norda
         x[i] = d_temp[i] - c_temp[i]*x[i+1]
     return x
 
-
+def tdma(A,d):
+    a=A.diagonal(-1)
+    b=A.diagonal(0)
+    c=A.diagonal(1)
+    return tdma_solver(a,b,c,d)
 
 #make L and R matrices
 
@@ -76,11 +81,12 @@ def runSimulation(Cinit,dt,dz,K,kw,timesteps,S):
     for i in range(timesteps-1):
         #print(C[i])
         C[i+1]=nextC(C[i],L,R,S[i],S[i+1])
-        print(i/timesteps)
+        if ((i*100)%timesteps==0):
+            print(i*100/timesteps,"%")
     return np.array(C)
 
 
 def massDifference(C): #C is the array returned after simulation
     mass=np.sum(C,axis=1)
     initMass=mass[0]
-    return mass-initMass #returns difference between initial mass and current mass for all timesteps
+    return mass-initMass, initMass #returns difference between initial mass and current mass for all timesteps, and the initial mass
