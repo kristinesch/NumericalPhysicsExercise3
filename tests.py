@@ -56,16 +56,22 @@ def test4(N,dt,dz,timesteps,kw):
 
     #constant diffusitivity
     Kconst=np.full(N,1000) 
-    C=runSimulation(Cinit,dt,dz,Kconst,kw,timesteps,S)
-    massesKconst=np.sum(C,axis=1) #gives array with the mass for each time
+    CKconst=runSimulation(Cinit,dt,dz,Kconst,kw,timesteps,S)
+    massesKconst=np.sum(CKconst,axis=1) #gives array with the mass for each time
 
     #variable diffusitivity
     z=np.linspace(0,N,N)
     Kvar=np.sin((N/2)*z)+1000
+
+    #Kvar=np.full(N,1000)
+    #Kvar[int(0)]=1001
+
     # plt.plot(z,Kvar)
     # plt.show()
-    C=runSimulation(Cinit,dt,dz,Kvar,kw,timesteps,S)
-    massesKvar=np.sum(C,axis=1) #gives array with the mass for each time
+    CKvar=runSimulation(Cinit,dt,dz,Kvar,kw,timesteps,S)
+    massesKvar=np.sum(CKvar,axis=1) #gives array with the mass for each time
+    plotConcentrations(CKvar,"funkerikke")
+    plt.matshow(CKvar.T)
 
     plotMass(massesKconst,massesKvar,t,kw,N,dz)
 
@@ -87,11 +93,11 @@ def test4(N,dt,dz,timesteps,kw):
 
 
 """Test 1"""
-N=100
+N=3000
 kw=0
 dt=1
 dz=1
-timesteps=1000
+timesteps=1000000
 
 #test1(N,dt,dz,timesteps)
 
@@ -104,5 +110,5 @@ timesteps=1000
 #test3(N,dt,dz,timesteps)
 
 """Test 4"""
-kw=0.01
+kw=0.0000697
 test4(N,dt,dz,timesteps,kw)

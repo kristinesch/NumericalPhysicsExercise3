@@ -83,7 +83,7 @@ def runSimulation(Cinit,dt,dz,K,kw,timesteps,S):
         C[i+1]=nextC(C[i],L,R,S[i],S[i+1])
         if ((i*100)%timesteps==0):
             print(i*100/timesteps,"%")
-    return np.array(C)
+    return C
 
 
 def massDifference(C): #C is the array returned after simulation

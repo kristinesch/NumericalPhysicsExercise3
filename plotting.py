@@ -51,9 +51,9 @@ def plotSigma(sigmas,K):
     fig.suptitle("Variance of distribution for "+str(N)+" spatial points")
     ax.set_xlabel("Time")
     ax.set_ylabel("Variance")
-    fig.legend()
+    fig.legend(loc="center")
     fig.savefig("test3")
-    fig.tight_layout()
+    #fig.tight_layout()
     plt.show()
 
 def plotMass(massesKconst,massesKvar, time,kw,N,dz):
@@ -70,7 +70,7 @@ def plotMass(massesKconst,massesKvar, time,kw,N,dz):
     ax[1].plot(time,M,label="Theoretical decay",linestyle="--", color="lightskyblue")
     ax[1].set_title("Variable diffusitivity")
 
-    fig.legend()
+    fig.legend(loc="lower right")
     ax[1].set_xlabel("Time")
     ax[0].set_ylabel("Mass")
     ax[1].set_ylabel("Mass")
