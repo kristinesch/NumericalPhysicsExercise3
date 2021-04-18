@@ -55,7 +55,7 @@ N=100
 kw=0
 dt=1
 dz=1
-timesteps=10000
+timesteps=5000
 
 #test1(N,dt,dz,timesteps)
 

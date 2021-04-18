@@ -1,5 +1,37 @@
 import numpy as np
 
+
+"""Thomas algorithm"""
+def tdma(A,d): #from jupyter notebook on linear algebra https://github.com/nordam/ComputationalPhysics/blob/master/Notebooks/10%20-%20Linear%20Algebra.ipynb
+    a=A.diagonal(-1)
+    b=A.diagonal(0)
+    c=A.diagonal(1)
+    N=len(d)
+    c_temp = np.zeros(N-1)
+    d_temp = np.zeros(N)
+    x  = np.zeros(N)
+
+    #i=0
+    c_temp[0] = c[0]/b[0]
+    d_temp[0] = d[0]/b[0]
+
+    #i=1 to i=N-2
+    for i in range(1, N-1):
+        q = (b[i] - a[i-1]*c_temp[i-1])
+        c_temp[i] = c[i]/q
+        d_temp[i] = (d[i] - a[i-1]*d_temp[i-1])/q
+
+    #i=N-1
+    d_temp[N-1] = (d[N-1] - a[N-2]*d_temp[N-2])/(b[N-1] - a[N-2]*c_temp[N-2])
+
+    #Back substitution
+    x[N-1] = d_temp[N-1]
+    for i in range(N-2, -1, -1):
+        x[i] = d_temp[i] - c_temp[i]*x[i+1]
+    return x
+
+
+
 #make L and R matrices
 
 def makeLandR(N,dt,dz,K,kw): #K has length N, indeces (0,1,2,3,..,N-1)
@@ -32,7 +64,7 @@ def makeLandR(N,dt,dz,K,kw): #K has length N, indeces (0,1,2,3,..,N-1)
 
 def nextC(Ci,L,R,Si,Snext):
     V=R@Ci+0.5*(Si+Snext)
-    return np.linalg.solve(L,V)
+    return tdma(L,V)
 
 def runSimulation(Cinit,dt,dz,K,kw,timesteps,S):
     N=len(Cinit)

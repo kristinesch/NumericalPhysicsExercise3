@@ -47,7 +47,7 @@ def plotSigma(sigmas,K):
     ax.plot(t,sigmas,label="Variance from simulation")
     ax.plot(t,theorySigma,label="Linear increase of variance")
     ax.plot(t,uniformSigmaList,label="uniform distribution variance")
-    ax.set_ylim(0,uniformSigma)
+    ax.set_ylim(0,uniformSigma*1.2) #axis stop a little bit over the plot
     fig.suptitle("Variance of distribution for "+str(N)+" particles")
     ax.set_xlabel("time")
     ax.set_ylabel("Variance")
