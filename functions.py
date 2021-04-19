@@ -42,7 +42,7 @@ def tdma(A,d):
 def makeLandR(N,dt,dz,K,kw): #K has length N, indeces (0,1,2,3,..,N-1)
     #some variables
     alpha=dt/(2*dz*dz)
-    Gamma=2*alpha*kw*dz*(1-(-(3/2)*K[0]+2*K[1]-(1/2)*K[2])/2*K[0])
+    Gamma=2*alpha*kw*dz*(1-((-(3/2)*K[0]+2*K[1]-(1/2)*K[2])/(2*K[0])))
     
 
     #X is the difference between R and the identity matrix
@@ -67,6 +67,13 @@ def makeLandR(N,dt,dz,K,kw): #K has length N, indeces (0,1,2,3,..,N-1)
     #print(L,R)
     return L,R
 
+def makeS(N,timesteps,Ceq,kw,dz,dt,K): #Ceq(t) depends on time, K(z) depends on space
+    S=np.zeros((timesteps,N))
+    alpha=dt/(2*dz*dz)
+    Gamma=2*alpha*kw*dz*(1-(-(3/2)*K[0]+2*K[1]-(1/2)*K[2])/(2*K[0]))
+    S[:,0]=Ceq*2*Gamma
+    return S
+
 def nextC(Ci,L,R,Si,Snext):
     V=R@Ci+0.5*(Si+Snext)
     return tdma(L,V)
@@ -90,3 +97,8 @@ def massDifference(C): #C is the array returned after simulation
     mass=np.sum(C,axis=1)
     initMass=mass[0]
     return mass-initMass, initMass #returns difference between initial mass and current mass for all timesteps, and the initial mass
+
+def minAndMaxConcentrations(C):
+    minC=np.amin(C,axis=1)
+    maxC=np.amax(C,axis=1)
+    return minC,maxC
