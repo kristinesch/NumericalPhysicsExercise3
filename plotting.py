@@ -94,3 +94,19 @@ def plotMinAndMaxConcentrations(time, Cmin,Cmax,Ceq,varOrConst):
     ax.set_title("for "+varOrConst+" diffusivity")
     fig.savefig("test5"+varOrConst)
     plt.show()
+
+def plotConcentration(C,plotFile):
+    fig,ax=plt.subplots(1,1)
+    T=len(C)
+    N=len(C[0])
+    z=np.linspace(0,N,N)
+
+    ax.plot(z,C[0])
+    ax.set_title("Concentration as function of depth")
+    ax.set_ylabel("Concentration")
+    ax.set_xlabel(z)
+    ax.set_ylim(0.9,1.1)
+
+    fig.tight_layout()
+    fig.savefig(plotFile)
+    plt.show()

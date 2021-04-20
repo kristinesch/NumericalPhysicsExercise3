@@ -48,11 +48,11 @@ def makeLandR(N,dt,dz,K,kw): #K has length N, indeces (0,1,2,3,..,N-1)
     #X is the difference between R and the identity matrix
     #R=I+X, L=I-X
     X=np.zeros((N,N))
+    #first row
     X[0,0]=-2*alpha*K[0]-Gamma
     X[0,1]=2*alpha*K[0]
     #all rows except first and last
     for i in range(1,N-1):
-        #print(i)
         X[i,i-1]= -(alpha/4)*(K[i+1]-K[i-1])+alpha*K[i]
         X[i,i]=-2*alpha*K[i]
         X[i,i+1]=(alpha/4)*(K[i+1]-K[i-1])+alpha*K[i]
@@ -64,41 +64,42 @@ def makeLandR(N,dt,dz,K,kw): #K has length N, indeces (0,1,2,3,..,N-1)
     R=np.identity(N)
     R+=X
     L-=X
-    #print(L,R)
     return L,R
 
 def makeS(N,timesteps,Ceq,kw,dz,dt,K): #Ceq(t) depends on time, K(z) depends on space
     S=np.zeros((timesteps,N))
     alpha=dt/(2*dz*dz)
     Gamma=2*alpha*kw*dz*(1-(-(3/2)*K[0]+2*K[1]-(1/2)*K[2])/(2*K[0]))
-    S[:,0]=Ceq*2*Gamma
+    S[:,0]=Ceq*2*Gamma 
     return S
 
-def nextC(Ci,L,R,Si,Snext):
+def nextC(Ci,L,R,Si,Snext): #calculates C for the next time step
     V=R@Ci+0.5*(Si+Snext)
-    return tdma(L,V)
+    return tdma(L,V) #using the tdma solver
 
 def runSimulation(Cinit,dt,dz,K,kw,timesteps,S):
+    #initialization
     N=len(Cinit)
     L,R=makeLandR(N,dt,dz,K,kw)
-    #print(R)
     C=np.zeros((timesteps,N))
     C[0]=Cinit
-    #print(C)
+
+    #simulation loop
     for i in range(timesteps-1):
-        #print(C[i])
         C[i+1]=nextC(C[i],L,R,S[i],S[i+1])
-        if ((i*100)%timesteps==0):
+
+        if ((i*100)%timesteps==0): #just to keep track of the time
             print(i*100/timesteps,"%")
-    return C
+    return C #C is a 2d array, the first index is the time, and the second is the spatial coordinate 
+    #a vector of the sea columns for each time
 
 
 def massDifference(C): #C is the array returned after simulation
-    mass=np.sum(C,axis=1)
+    mass=np.sum(C,axis=1) 
     initMass=mass[0]
     return mass-initMass, initMass #returns difference between initial mass and current mass for all timesteps, and the initial mass
 
-def minAndMaxConcentrations(C):
-    minC=np.amin(C,axis=1)
-    maxC=np.amax(C,axis=1)
+def minAndMaxConcentrations(C):#C is the array returned after simulation
+    minC=np.amin(C,axis=1) #minimum value of each column of C
+    maxC=np.amax(C,axis=1) #max value of each column of C
     return minC,maxC

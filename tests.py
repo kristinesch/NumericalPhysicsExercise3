@@ -12,8 +12,6 @@ def test1(L,dt,dz,T):
     #initialize C
     C1init=np.zeros(N)
     C1init.fill(1)
-    print("Cinit",C1init)
-
 
     S=np.zeros((timesteps,N))
 
@@ -29,8 +27,6 @@ def test2(L,dt,dz,T):
     Cinit=norm.pdf(z,L/2,L/5) #normal distribution
     C=runSimulation(Cinit,dt,dz,K,0,timesteps,S)
     massDiff,initMass=massDifference(C)
-    print(np.sum(C[0]))
-    #print(massDiff)
     plotMassDifference(massDiff,initMass,T)
     plotConcentrations(C,"test2C")
 
@@ -43,18 +39,14 @@ def test3(L,dt,dz,T):
     print(K)
     Cinit=norm.pdf(z,L/2,2*dz) #normal distribution, very thin
     C=runSimulation(Cinit,dt,dz,K,0,timesteps,S)
-    plotConcentrations(C,"test3C")
+    #plotConcentrations(C,"test3C")
     #print(C)
     sigmas=[]
     for Ci in C:
-        #print(Ci)
         mu=np.sum(np.dot(Ci,z)*dz)/np.sum(Ci*dz)
-        #print(mu)
-        #print(Ci*((z-mu)@(z-mu)))
         sigmas.append(np.sum(Ci*((z-mu)**2)*dz)/(np.sum(Ci)*dz))
-        
-    #print(sigmas)
     plotSigma(sigmas,K,L,timesteps)
+
 
 def test4(L,dt,dz,T,kw):
     N=int(L/dz)
@@ -77,13 +69,13 @@ def test4(L,dt,dz,T,kw):
     print("C",len(CKvar))
     #plotConcentrations(CKvar,"funkerikke")
     #plt.matshow(CKvar.T)
-
     plotMass(massesKconst,massesKvar,t,kw,L)
 
-def test5(N,dt,dz,timesteps,kw,Ceq,K,Kstring):
+def test5(N,dt,dz,T,kw,Ceq,K,Kstring):
+    timesteps=int(T/dt)
     Cinit=np.zeros(N)
     S=makeS(N,timesteps,Ceq,kw,dz,dt,K)
-    t=np.linspace(0,timesteps,timesteps)
+    t=np.linspace(0,T,timesteps)
     
     C=runSimulation(Cinit,dt,dz,K,kw,timesteps,S)
     Cmin,Cmax=minAndMaxConcentrations(C)
@@ -137,7 +129,7 @@ dt=0.1
 T=200
 timesteps=int(T/dt)
 
-test3(L,dt,dz,T)
+#test3(L,dt,dz,T)
 
 """Test 4"""
 #kw=0.0000697
@@ -169,5 +161,5 @@ Kv=np.sin(2*z)+2
 Ceq=np.full(timesteps,HpCO2)
 kw=0.1
 
-# test5(N,dt,dz,timesteps,kw,Ceq,Kc,"constant")
+test5(N,dt,dz,timesteps,kw,Ceq,Kc,"constant")
 # test5(N,dt,dz,timesteps,kw,Ceq,Kv,"variable")
