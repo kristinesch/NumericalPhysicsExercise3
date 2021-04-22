@@ -81,33 +81,63 @@ def plotMass(massesKconst,massesKvar, time,kw,L):
     fig.savefig("test4")
     plt.show()
 
-def plotMinAndMaxConcentrations(time, Cmin,Cmax,Ceq,varOrConst):
+def plotMinAndMaxConcentrations(time, Cmin,Cmax,Ceq,varOrConst, filename,test5=True):
     fig, ax=plt.subplots(1,1)
     Ceqs=np.full(len(time),Ceq)
+    ax.plot(time,Ceqs,label="Equilibrium concentration")
     ax.plot(time,Cmin,label="Minimum concentration")
     ax.plot(time,Cmax,label="Maximum concentration")
-    ax.plot(time,Ceqs,label="Equilibrium concentration")
+    
     ax.set_xlabel("Time")
     ax.set_ylabel("Concentration")
-    fig.legend(loc="center")
     fig.suptitle("Minimum and maximum concentrations as function of time")
-    ax.set_title("for "+varOrConst+" diffusivity")
-    fig.savefig("test5"+varOrConst)
+    fig.legend(loc="center")
+    if test5:
+        ax.set_title("for "+varOrConst+" diffusivity")
+        fig.savefig("test5"+varOrConst)
+    else:
+        fig.savefig(filename)
+
+    
     plt.show()
 
-def plotConcentration(C,plotFile):
-    fig,ax=plt.subplots(1,1)
+
+
+
+def plotConcentrationFor4times(C,plotFile,L):
+    fig,ax=plt.subplots(2,2)
     T=len(C)
+    y=np.amax(C[T-1])
+    ti=[0,T/100,T/5,T]
     N=len(C[0])
-    z=np.linspace(0,N,N)
+    z=np.linspace(0,L,N)
+    fig.suptitle("Concentration as function of depth")
+    
+    ax[0,0].plot(z,C[0])
+    ax[0,0].set_title("T="+str(0))
+    ax[0,0].set_ylabel("Concentration")
+    ax[0,0].set_xlabel("z")
+    ax[0,0].set_ylim(0,y+y/10)
 
-    ax.plot(z,C[0])
-    ax.set_title("Concentration as function of depth")
-    ax.set_ylabel("Concentration")
-    ax.set_xlabel(z)
-    ax.set_ylim(0.9,1.1)
+    ax[0,1].plot(z,C[int(ti[1])-1])
+    ax[0,1].set_title("T="+str(int(ti[1])))
+    ax[0,1].set_ylabel("Concentration")
+    ax[0,1].set_xlabel("z")
+    ax[0,1].set_ylim(0,y+y/10)
 
-    fig.tight_layout()
+    ax[1,0].plot(z,C[int(ti[2])-1])
+    ax[1,0].set_title("T="+str(int(ti[2])))
+    ax[1,0].set_ylabel("Concentration")
+    ax[1,0].set_xlabel("z")
+    ax[1,0].set_ylim(0,y+y/10)
+    
+    ax[1,1].plot(z,C[T-1])
+    ax[1,1].set_title("T="+str(T))
+    ax[1,1].set_ylabel("Concentration")
+    ax[1,1].set_xlabel("z")
+    ax[1,1].set_ylim(0,y+y/10)
+
+    fig.tight_layout(h_pad=1,rect=[0, 0.03, 1, 0.9])
     fig.savefig(plotFile)
     plt.show()
 

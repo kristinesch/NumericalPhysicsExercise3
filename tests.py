@@ -79,7 +79,7 @@ def test5(N,dt,dz,T,kw,Ceq,K,Kstring):
     
     C=runSimulation(Cinit,dt,dz,K,kw,timesteps,S)
     Cmin,Cmax=minAndMaxConcentrations(C)
-    plotMinAndMaxConcentrations(t,Cmin,Cmax,Ceq,Kstring)
+    plotMinAndMaxConcentrations(t,Cmin,Cmax,Ceq,Kstring,"test5")
 
 
 
