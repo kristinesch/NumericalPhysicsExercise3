@@ -111,11 +111,11 @@ def plotConcentration(C,plotFile):
     fig.savefig(plotFile)
     plt.show()
 
-def convergencePlot(dtList,errors,d):
+def convergencePlot(dtList,errors,d): #d is a string: dt or dz
     fig,ax=plt.subplots(1,1)
     ax.plot(dtList,errors)
     ax.set_xlabel(d)
     ax.set_ylabel("Max error")
-    fig.savefig("Convergence")
-    fig.suptitle("Maximum errors")
+    fig.savefig("Convergence"+d)
+    fig.suptitle("Maximum error as function of "+d)
     plt.show()

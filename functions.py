@@ -73,6 +73,10 @@ def makeS(N,timesteps,Ceq,kw,dz,dt,K): #Ceq(t) depends on time, K(z) depends on 
     S[:,0]=Ceq*2*Gamma 
     return S
 
+def makeK(z,L): #K from eq 11 in problem text
+    Larr=np.full(len(z),L)
+    return 0.001+(0.02/7)*z*np.exp(-z/7)+(0.05/10)*(Larr-z)*np.exp(-(Larr-z)/10)
+
 def nextC(Ci,L,R,Si,Snext): #calculates C for the next time step
     V=R@Ci+0.5*(Si+Snext)
     return tdma(L,V) #using the tdma solver
@@ -114,3 +118,23 @@ def checkMaxError(C,Ctest):
     print(len(Csub))
     errors=np.abs(Csub-Ctest) #array with absolute value of the difference between each of the elements of C and Ctest
     return np.amax(errors) #return largest error
+
+def shallowSim(T,L,dt,dz,kw,Ceq,npyFile): #simulation with parameters from problem 2
+    N=int(L/dz)
+    timesteps=int(T/dt)
+    z=np.linspace(0,L,N)
+    Ceqs=np.full(timesteps,Ceq)
+#initialization
+    K=makeK(z,L)
+    Cinit=np.zeros(N) #zero initial concentration
+    S=makeS(N,timesteps,Ceqs,kw,dz,dt,K)
+    
+    C=runSimulation(Cinit,dt,dz,K,kw,timesteps,S)
+    np.save(npyFile,C)
+
+def convergenceTest(C,CList): #C is an accurate simulation to be compared with
+    errors=[]
+    for Ci in CList:
+        print(len(Ci),len(C))
+        errors.append(checkMaxError(C,Ci))
+    return errors
