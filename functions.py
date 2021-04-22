@@ -103,3 +103,14 @@ def minAndMaxConcentrations(C):#C is the array returned after simulation
     minC=np.amin(C,axis=1) #minimum value of each column of C
     maxC=np.amax(C,axis=1) #max value of each column of C
     return minC,maxC
+
+"""convergence test"""
+def checkMaxError(C,Ctest):
+    x=int(len(C)/len(Ctest))
+    y=int(len(C[0])/len(Ctest[0]))
+    print(x,y)
+    print(len(C[0]),len(Ctest[0]))
+    Csub=C[::x,::y] #array with every yth row and xth column of C
+    print(len(Csub))
+    errors=np.abs(Csub-Ctest) #array with absolute value of the difference between each of the elements of C and Ctest
+    return np.amax(errors) #return largest error

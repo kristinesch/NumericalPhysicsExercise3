@@ -11,14 +11,14 @@ def plotConcentrations(Ci,plotFile):
     ax[0].plot(z,Ci[0])
     ax[0].set_title("Initial concentration")
     ax[0].set_ylabel("Concentration")
-    ax[0].set_ylim(0.9,1.1)
+    #ax[0].set_ylim(0.9,1.1)
 
     #ax[1].set_ylim(0,2)
     ax[1].plot(z,Ci[T-1])
     ax[1].set_title("Final concentration")
     ax[1].set_xlabel("z")
     ax[1].set_ylabel("Concentration")
-    ax[1].set_ylim(0.9,1.1)
+    #ax[1].set_ylim(0.9,1.1)
     fig.tight_layout()
     fig.savefig(plotFile)
     plt.show()
@@ -109,4 +109,13 @@ def plotConcentration(C,plotFile):
 
     fig.tight_layout()
     fig.savefig(plotFile)
+    plt.show()
+
+def convergencePlot(dtList,errors,d):
+    fig,ax=plt.subplots(1,1)
+    ax.plot(dtList,errors)
+    ax.set_xlabel(d)
+    ax.set_ylabel("Max error")
+    fig.savefig("Convergence")
+    fig.suptitle("Maximum errors")
     plt.show()
