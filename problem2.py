@@ -18,7 +18,23 @@ dz=0.1
 timesteps=int(T/dt)
 t=np.linspace(0,T,timesteps)
 
+def makeK(z,L): #K from eq 11 in problem text
+    Larr=np.full(len(z),L)
+    return 0.001+(0.02/7)*z*np.exp(-z/7)+(0.05/10)*(Larr-z)*np.exp(-(Larr-z)/10)
 
+
+def shallowSim(T,L,dt,dz,kw,Ceq,npyFile): #simulation with parameters from problem 2
+    N=int(L/dz)
+    timesteps=int(T/dt)
+    z=np.linspace(0,L,N)
+    Ceqs=np.full(timesteps,Ceq)
+#initialization
+    K=makeK(z,L)
+    Cinit=np.zeros(N) #zero initial concentration
+    S=makeS(N,timesteps,Ceqs,kw,dz,dt,K)
+    
+    C=runSimulation(Cinit,dt,dz,K,kw,timesteps,S)
+    np.save(npyFile,C)
 
 """Convergence test for dt"""
 # #shallowSim(T,L,dt,dz,kw,Ceq,"dt"+str(dt)+".npy")

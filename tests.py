@@ -161,5 +161,15 @@ Kv=np.sin(2*z)+2
 Ceq=np.full(timesteps,HpCO2)
 kw=0.1
 
-test5(N,dt,dz,timesteps,kw,Ceq,Kc,"constant")
+#test5(N,dt,dz,timesteps,kw,Ceq,Kc,"constant")
 # test5(N,dt,dz,timesteps,kw,Ceq,Kv,"variable")
+
+C=np.array([[1,2,3,4,5],[1,2,3,4,5],[1,2,3,4,5],[1,2,3,4,5],[1,2,3,4,5],[1,2,3,4,5]])
+Ctest=np.array([[1,3,5],[1,3,5],[1,3,5]])
+
+x=np.round(np.linspace(0,len(C)-1,len(Ctest))).astype(int)
+#print(x)
+y=np.round(np.linspace(0,len(C[0])-1,len(Ctest[0]))).astype(int)
+#print(y)
+Csub=C[x,y]
+print(Csub)
