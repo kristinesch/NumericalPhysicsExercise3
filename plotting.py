@@ -104,11 +104,10 @@ def plotMinAndMaxConcentrations(time, Cmin,Cmax,Ceq,varOrConst, filename,test5=T
 
 
 
-def plotConcentrationFor4times(C,plotFile,L):
+def plotConcentrationFor4times(C,plotFile,L,ti):
     fig,ax=plt.subplots(2,2)
     T=len(C)
     y=np.amax(C[T-1])
-    ti=[0,T/100,T/5,T]
     N=len(C[0])
     z=np.linspace(0,L,N)
     fig.suptitle("Concentration as function of depth")
@@ -148,4 +147,13 @@ def convergencePlot(dtList,errors,d): #d is a string: dt or dz
     ax.set_ylabel("Max error")
     fig.savefig("Convergence"+d)
     fig.suptitle("Maximum error as function of "+d)
+    plt.show()
+
+def plotTotalMass(masses,t):
+    fig,ax=plt.subplots(1,1)
+    ax.plot(t,masses)
+    ax.set_xlabel("time")
+    ax.set_ylabel("total mass")
+    fig.suptitle("Total mass of DIC in the ocean")
+    fig.savefig("P3totalMass")
     plt.show()

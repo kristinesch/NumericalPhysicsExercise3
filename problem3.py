@@ -9,12 +9,12 @@ H=5060
 pCO2init=415e-6
 
 
-L=4000
-T=365*day
-dz=1
-dt=100
-N=int(L/dz)
-timesteps=int(T/dt)
+# L=4000
+# T=365*day
+# dz=1
+# dt=100
+# N=int(L/dz)
+# timesteps=int(T/dt)
 
 
 
@@ -35,6 +35,7 @@ def deepSim(T,L,dt,dz,kw,npyFile): #simulation with parameters from problem 3
     Ceqs=H*(pCO2init+2.3e-6*t/year) #Equilibrium concentration as functon of time, values from problem text
     S=makeS(N, timesteps, Ceqs, kw, dz, dt, K)
     C=runSimulation(Cinit, dt, dz, K, kw, timesteps, S)
+    print("simulation done")
     np.save(npyFile,C) #saving the data
 
 """plotting K(z)"""
@@ -95,11 +96,10 @@ def calculateConvergenceTestErrors(d, dList,accurateCnpy,allTimes=True):
     print("Errors:",dErrors)
     convergencePlot(dList, dErrors, d)
 
+
 dtList=[10000,50000,100000,500000,1000000,5000000,10000000]
 #runConvergenceSimulations("dt", dtList)
-calculateConvergenceTestErrors("dt", dtList, "C3dt1000dz0.2.npy",allTimes=False)
-
-
+#calculateConvergenceTestErrors("dt", dtList, "C3dt1000dz0.2.npy",allTimes=False)
 
 
 #dzList=[0.4,0.8,1.6,4,16,40,100,400,1000]
@@ -107,5 +107,22 @@ calculateConvergenceTestErrors("dt", dtList, "C3dt1000dz0.2.npy",allTimes=False)
 #calculateConvergenceTestErrors("dz", dzList, "C3dt1000dz0.2.npy")
 
 """Full 10 year simulation"""
+L=4000
+
+dt=10000
+dz=0.8
+T=10*year
+print(T/dt)
 
 
+#deepSim(T, L, dt, dz, kw, "fullDeepSim2.npy")
+
+
+"""Plotting"""
+deepSimC=np.load("fullDeepSim2.npy")
+#plotConcentrationFor4times(deepSimC, "deepSim", L,[0,2.5*year,5*year,10*year])
+
+timesteps=int(T/dt)
+t=np.linspace(0,T,timesteps)
+deepSimMasses=totalMass(deepSimC, L)
+plotTotalMass(deepSimMasses, t)

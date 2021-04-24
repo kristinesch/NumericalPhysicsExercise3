@@ -37,7 +37,8 @@ def tdma(A,d):
     c=A.diagonal(1)
     return tdma_solver(a,b,c,d)
 
-#make L and R matrices
+
+"""Simulation"""
 
 def makeLandR(N,dt,dz,K,kw): #K has length N, indeces (0,1,2,3,..,N-1)
     #some variables
@@ -74,7 +75,6 @@ def makeS(N,timesteps,Ceq,kw,dz,dt,K): #Ceq(t) depends on time, K(z) depends on 
     return S
 
 
-
 def nextC(Ci,L,R,Si,Snext): #calculates C for the next time step
     V=R@Ci+0.5*(Si+Snext)
     return tdma(L,V) #using the tdma solver
@@ -96,6 +96,9 @@ def runSimulation(Cinit,dt,dz,K,kw,timesteps,S):
     #a vector of the sea columns for each time
 
 
+
+"""Calculating stuff after simulation"""
+
 def massDifference(C): #C is the array returned after simulation
     mass=np.sum(C,axis=1) 
     initMass=mass[0]
@@ -105,6 +108,10 @@ def minAndMaxConcentrations(C):#C is the array returned after simulation
     minC=np.amin(C,axis=1) #minimum value of each column of C
     maxC=np.amax(C,axis=1) #max value of each column of C
     return minC,maxC
+
+def totalMass(C,L):
+    masses=np.sum(C,axis=1)*12*360e12
+    return masses
 
 """convergence test"""
 def checkMaxError(C,Ctest):
