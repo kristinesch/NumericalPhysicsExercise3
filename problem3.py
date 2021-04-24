@@ -45,24 +45,67 @@ def deepSim(T,L,dt,dz,kw,npyFile): #simulation with parameters from problem 3
 
 """Convergence test"""
 
-#Parameters used for dt: T=1*year, L=4000, dz=0.2
+# #Parameters used for dt: T=1*year, L=4000, dz=0.2
 dt=1000
 T=1*year
 dz=0.2
-#deepSim(T,L,dt,dz,kw,"C3dt"+str(dt)+"dz"+str(dz)+".npy")
-dtList=[5000,10000,50000,100000,500000,1000000,5000000,10000000]
-for dti in dtList:
-    deepSim(T,L,dti,dz,kw,"C3dt"+str(dti)+"dz"+str(dz)+".npy")
+# #deepSim(T,L,dt,dz,kw,"C3dt"+str(dt)+"dz"+str(dz)+".npy")
+# dtList=[5000,10000,50000,100000,500000,1000000,5000000,10000000]
+# for dti in dtList:
+#     deepSim(T,L,dti,dz,kw,"C3dt"+str(dti)+"dz"+str(dz)+".npy")
 
 
-C3dt1000dz02=np.load("C3dt1000dz0.2.npy")
-#plotConcentrationFor4times(C3dt1000dz02, "P3test", L)
+# C3dt1000dz02=np.load("C3dt1000dz0.2.npy")
+# #plotConcentrationFor4times(C3dt1000dz02, "P3test", L)
 
 
-CdtList=[]
-for dti in dtList:
-    CdtList.append(np.load("C3dt"+str(dti)+"dz"+str(dz)+".npy"))
-dtErrors=convergenceTestLastTimestep(C3dt1000dz02, CdtList)
-np.save("ConvergenceP3dt.npy",dtErrors)
-print(dtErrors)
-convergencePlot(dtList, dtErrors, "dt")
+# CdtList=[]
+# for dti in dtList:
+#     CdtList.append(np.load("C3dt"+str(dti)+"dz"+str(dz)+".npy"))
+# dtErrors=convergenceTestLastTimestep(C3dt1000dz02, CdtList)
+# np.save("ConvergenceP3dt.npy",dtErrors)
+# print(dtErrors)
+# convergencePlot(dtList, dtErrors, "dt")
+
+
+
+def runConvergenceSimulations(d,dList): #d is a string: dt or dz
+    if d=="dz":
+        for dzi in dList:
+            deepSim(T,L,dt,dzi,kw,"C3dt"+str(dt)+"dz"+str(dzi)+".npy")
+    elif d=="dt":
+        for dti in dList:
+            deepSim(T,L,dti,dz,kw,"C3dt"+str(dti)+"dz"+str(dz)+".npy")
+
+def calculateConvergenceTestErrors(d, dList,accurateCnpy,allTimes=True):
+    CList=[]
+    if d=="dz":
+        for dzi in dList:
+            CList.append(np.load("C3dt"+str(dt)+"dz"+str(dzi)+".npy"))
+    elif d=="dt":
+        for dti in dList:
+            print(dti)
+            CList.append(np.load("C3dt"+str(dti)+"dz"+str(dz)+".npy"))
+    accurateC=np.load(accurateCnpy)
+    if allTimes:
+        dErrors=convergenceTest(accurateC, CList)
+    else:
+        dErrors=convergenceTestLastTimestep(accurateC, CList)
+    np.save("ConvergenceP3"+d+".npy",dErrors)
+    print("Errors:",dErrors)
+    convergencePlot(dList, dErrors, d)
+
+dtList=[10000,50000,100000,500000,1000000,5000000,10000000]
+#runConvergenceSimulations("dt", dtList)
+calculateConvergenceTestErrors("dt", dtList, "C3dt1000dz0.2.npy",allTimes=False)
+
+
+
+
+#dzList=[0.4,0.8,1.6,4,16,40,100,400,1000]
+#runConvergenceSimulations("dz", dzList)
+#calculateConvergenceTestErrors("dz", dzList, "C3dt1000dz0.2.npy")
+
+"""Full 10 year simulation"""
+
+

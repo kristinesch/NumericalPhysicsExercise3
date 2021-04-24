@@ -1,6 +1,6 @@
 import numpy as np
 from numba import jit
-
+import math
 
 
 """Thomas algorithm"""
@@ -110,30 +110,37 @@ def minAndMaxConcentrations(C):#C is the array returned after simulation
 def checkMaxError(C,Ctest):
     x=int(len(C)/len(Ctest))
     y=int(len(C[0])/len(Ctest[0]))
-    print(x,y)
-    print(len(C[0]),len(Ctest[0]))
+    print("x",x)
+    print("lens",len(C),len(Ctest))
     Csub=C[::x,::y] #array with every yth row and xth column of C
     print(len(Csub))
     errors=np.abs(Csub-Ctest) #array with absolute value of the difference between each of the elements of C and Ctest
     return np.amax(errors) #return largest error
 
+# def checkMaxErrorLastTimestep(C,Ctest):
+#     y=int(len(C[0])/len(Ctest[0]))
+#     i=np.round(np.linspace(0,len(C)-1,len(Ctest))).astype(int)
+#     Cend=C[len(C)-1]
+#     errors=np.abs(Cend[y]-Ctest[len(Ctest)-1])
+#     return np.amax(errors)
+    
 def checkMaxErrorLastTimestep(C,Ctest):
     errors=np.abs(C[len(C)-1]-Ctest[len(Ctest)-1])
     return np.amax(errors)
-    
-
 
 
 def convergenceTest(C,CList): #C is an accurate simulation to be compared with
     errors=[]
+    i=0
     for Ci in CList:
+        print("dt no",i)
         print(len(Ci),len(C))
         errors.append(checkMaxError(C,Ci))
+        i+=1
     return errors
 
 def convergenceTestLastTimestep(C,CList): #C is an accurate simulation to be compared with
     errors=[]
     for Ci in CList:
-        print(len(Ci),len(C))
         errors.append(checkMaxErrorLastTimestep(C,Ci))
     return errors

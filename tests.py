@@ -173,3 +173,8 @@ y=np.round(np.linspace(0,len(C[0])-1,len(Ctest[0]))).astype(int)
 #print(y)
 Csub=C[x,y]
 print(Csub)
+
+def makeArraysSameDim(A1,A2): #assume A1 is bigger than A2
+    x=np.round(np.linspace(0,len(A1)-1,len(A2))).astype(int)
+    y=np.round(np.linspace(0,len(A1)-1,len(A2))).astype(int)
+    return A1[x,y] #returns subsampling of A1, with same dim as A2
