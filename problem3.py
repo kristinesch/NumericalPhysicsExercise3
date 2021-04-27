@@ -124,5 +124,12 @@ deepSimC=np.load("fullDeepSim2.npy")
 
 timesteps=int(T/dt)
 t=np.linspace(0,T,timesteps)
-deepSimMasses=totalMass(deepSimC, L)
+deepSimMasses=totalMass(deepSimC, dz)
 plotTotalMass(deepSimMasses, t)
+
+def calculateMassPerYear(masses, years):
+    return (masses[-1]-masses[0])/years
+
+print(deepSimMasses[-1],deepSimMasses[0])
+
+print("Average total mass absorbed by the global oceans per year: ", calculateMassPerYear(deepSimMasses, 10))

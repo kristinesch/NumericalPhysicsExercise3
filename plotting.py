@@ -157,3 +157,4 @@ def plotTotalMass(masses,t):
     fig.suptitle("Total mass of DIC in the ocean")
     fig.savefig("P3totalMass")
     plt.show()
+

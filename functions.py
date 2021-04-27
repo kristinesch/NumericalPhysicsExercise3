@@ -109,8 +109,8 @@ def minAndMaxConcentrations(C):#C is the array returned after simulation
     maxC=np.amax(C,axis=1) #max value of each column of C
     return minC,maxC
 
-def totalMass(C,L):
-    masses=np.sum(C,axis=1)*12*360e12
+def totalMass(C,dz): #not sure if this is right???
+    masses=np.sum(C,axis=1)*12*360e12*dz
     return masses
 
 """convergence test"""
