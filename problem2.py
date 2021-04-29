@@ -37,19 +37,31 @@ def shallowSim(T,L,dt,dz,kw,Ceq,npyFile): #simulation with parameters from probl
     np.save(npyFile,C)
 
 """Convergence test for dt"""
-# #shallowSim(T,L,dt,dz,kw,Ceq,"dt"+str(dt)+".npy")
+#shallowSim(T,L,dt,dz,kw,Ceq,"dt"+str(dt)+".npy")
 
-# # Cdt1=np.load("dt1.npy")
-# # #CList=[np.load("dt2.npy"),np.load("dt5.npy"),np.load("dt10.npy"),np.load("dt15.npy"),np.load("dt20.npy"),np.load("dt50.npy"),np.load("dt100.npy"),np.load("dt200.npy"),np.load("dt500.npy"),np.load("dt1000.npy")]
-# dtList=[2,5,10,15,20,50,100,200,500,1000]
-# # #errors=convergenceTest(Cdt1, CList)
-# # #np.save("convergenceErrors.npy",errors)
-# errors=np.load("convergenceErrors.npy")
-# convergencePlot(dtList, errors,"dt")
-# print(errors)
+# Cdt1=np.load("dt1.npy")
+#CList=[np.load("dt2.npy"),np.load("dt5.npy"),np.load("dt10.npy"),np.load("dt15.npy"),np.load("dt20.npy"),np.load("dt50.npy"),np.load("dt100.npy"),np.load("dt200.npy"),np.load("dt500.npy"),np.load("dt1000.npy")]
+dtList=[2,5,10,15,20,50,100,200,500,1000]
+# #errors=convergenceTest(Cdt1, CList)
+# #np.save("convergenceErrors.npy",errors)
+#errors=np.load("convergenceErrors.npy")
+#convergencePlot(dtList, errors,"dt")
+#print(errors)
 
-# #plotConcentrations(Cdt1, "2p2checkC")
+#plotConcentrations(Cdt1, "2p2checkC")
+dtListShort=[200,500,1000]
+def dtM1convergence(C,dtList,dz,dt_ref,L,T):
+    CList=[]
+    N=int(L/dz)
+    for dti in dtList:
+            CList.append(np.load("dt"+str(dti)+".npy"))
+    M1, RMS =M1andRMSerrors(C, CList, dt_ref, dz, dtList,N,L,T)
+    plotM1andRMSerrors(M1,RMS, dtList)
+    
 
+C_ref=np.load("dt100.npy")
+print("ok")
+dtM1convergence(C_ref, dtListShort, 0.1, 1,L,T)
 
 """Convergence test for dz"""
 # # dz=0.1
@@ -84,7 +96,7 @@ C=np.load("C180daySimulation.npy")
 #PLOTTING
 #Cmin,Cmax=minAndMaxConcentrations(C)
 #plotMinAndMaxConcentrations(t, Cmin, Cmax, Ceq, "variable", "P2minMaxC",test5=False)
-plotConcentrationFor4times(C, "P2C(z)",L)
+#plotConcentrationFor4times(C, "P2C(z)",L)
 
 """plotting K"""
 # def plotK(L,dz): #plotting K as described in problem 2

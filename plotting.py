@@ -158,3 +158,13 @@ def plotTotalMass(masses,t):
     fig.savefig("P3totalMass")
     plt.show()
 
+
+def plotM1andRMSerrors(M1errors,RMSerrors,dtList):
+    fig,ax=plt.subplots(1,1)
+    ax.plot(dtList,M1errors,label="1st moment")
+    ax.plot(dtList,RMSerrors, label="RMS")
+    ax.set_xlabel("dt")
+    ax.set_ylabel("Error")
+    fig.legend()
+    fig.savefig("M1errors")
+    plt.show()

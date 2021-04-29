@@ -1,6 +1,7 @@
 import numpy as np
 from numba import jit
 import math
+from scipy.integrate import simps
 
 
 """Thomas algorithm"""
@@ -109,7 +110,7 @@ def minAndMaxConcentrations(C):#C is the array returned after simulation
     maxC=np.amax(C,axis=1) #max value of each column of C
     return minC,maxC
 
-def totalMass(C,dz): #not sure if this is right???
+def totalMass(C,dz): 
     masses=np.sum(C,axis=1)*12*360e12*dz
     return masses
 
@@ -145,6 +146,26 @@ def convergenceTest(C,CList): #C is an accurate simulation to be compared with
         errors.append(checkMaxError(C,Ci))
         i+=1
     return errors
+
+def M1andRMSerrors(C,CList,dt_ref, dz,dtList,N,L,T): #only checks last timestep. Integrates over z. 
+    x=int(len(C)/len(CList[0]))
+    z=np.linspace(0,L,N)
+    M1errors=np.zeros(len(dtList)) #to save data
+    RMSerrors=np.zeros(len(dtList))
+    M1_ref=simps(C[0]*z,x=z) #simpsons method integration  for reference solution
+    t_ref=np.linspace(0,T,dt_ref)
+    
+    for i,Ci in enumerate(CList):
+        #t=np.linspace(0,T,dtList[i]) not needed?
+        x=int(len(C)/len(Ci))
+        M1errors[i]=np.abs(M1_ref-simps(Ci[i]*z,x=z)) #error for this dt
+        RMSerrors[i]=np.sqrt(np.mean((Ci-C[::x])**2))
+        print(i)
+    
+    return M1errors, RMSerrors
+#RMS_error[i] = np.sqrt(np.mean((C - C_ref)**2))
+#RMS_error = np.zeros(len(timesteps))
+        
 
 def convergenceTestLastTimestep(C,CList): #C is an accurate simulation to be compared with
     errors=[]
