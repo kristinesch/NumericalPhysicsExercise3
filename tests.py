@@ -53,7 +53,7 @@ def test4(L,dt,dz,T,kw):
     timesteps=int(T/dt)
     print(L)
     Cinit=np.full(N,1) #init concentration const in space
-    S=np.zeros((timesteps,N)) #??
+    S=np.zeros((timesteps,N)) 
     t=np.linspace(0,T,timesteps)
 
     #constant diffusitivity
@@ -84,7 +84,7 @@ def test5(N,dt,dz,T,kw,Ceq,K,Kstring):
 
 
 
-"""PROFILING""" #funker ikke :(
+"""PROFILING""" 
 #K=np.linspace(1,10,N)
 
 # #initialize C
@@ -151,8 +151,6 @@ kw=0.1
 
 
 # #Testing Cmin, Cmax
-# muh=np.array([[1,2,3],[4,5,6]])
-# print(np.amax(muh,axis=1))
 HpCO2=2.01
 
 Kc=np.full(N,1)
@@ -164,6 +162,9 @@ kw=0.1
 #test5(N,dt,dz,timesteps,kw,Ceq,Kc,"constant")
 # test5(N,dt,dz,timesteps,kw,Ceq,Kv,"variable")
 
+
+
+#testing stuff for making arrays same dimension
 C=np.array([[1,2,3,4,5],[1,2,3,4,5],[1,2,3,4,5],[1,2,3,4,5],[1,2,3,4,5],[1,2,3,4,5]])
 Ctest=np.array([[1,3,5],[1,3,5],[1,3,5]])
 

@@ -61,7 +61,7 @@ def plotSigma(sigmas,K,L,timesteps):
     plt.show()
 
 def plotMass(massesKconst,massesKvar, time,kw,L):
-    M0=massesKconst[0] #denne er lik for begge right?
+    M0=massesKconst[0] 
     M=M0*np.exp(-time*(kw/L))
 
     fig, ax= plt.subplots(2,1,sharex=True)
