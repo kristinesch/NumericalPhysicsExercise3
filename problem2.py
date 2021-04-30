@@ -49,36 +49,34 @@ dtList=[2,5,10,15,20,50,100,200,500,1000]
 #print(errors)
 
 #plotConcentrations(Cdt1, "2p2checkC")
-dtListShort=[200,500,1000]
-def dtM1convergence(C,dtList,dz,dt_ref,L,T):
-    CList=[]
-    N=int(L/dz)
-    for dti in dtList:
-            CList.append(np.load("dt"+str(dti)+".npy"))
-    M1, RMS =M1andRMSerrors(C, CList, dt_ref, dz, dtList,N,L,T)
-    plotM1andRMSerrors(M1,RMS, dtList)
-    
+dtListShort=[15,20,50,100,200,500,1000]
 
-C_ref=np.load("dt100.npy")
+    
+        
+C_ref=np.load("dt1.npy")
 print("ok")
-dtM1convergence(C_ref, dtListShort, 0.1, 1,L,T)
+#dtM1andRMSconvergence(C_ref, dtList, 0.1,L,T,2)
+
 
 """Convergence test for dz"""
 # # dz=0.1
 # # shallowSim(T,L,dt,dz,kw,Ceq,"dz"+str(dz)+".npy")
 
-# dzList=[0.02,0.05,0.1,0.2,0.5,1]
+dzList=[0.02,0.05,0.1,0.2,0.5,1]
+dzListShort=[0.5,1]
 # # # for dzi in dzList:
 # # #     print(dzi)
 # # #     shallowSim(T,L,dt,dzi,kw,Ceq,"dz"+str(dzi)+".npy")
 
-# # Cdz=np.load("dz0.01.npy")
+Cdz=np.load("dz0.01.npy")
 # # CdzList=[np.load("dz0.02.npy"),np.load("dz0.05.npy"),np.load("dz0.1.npy"),np.load("dz0.2.npy"),np.load("dz0.5.npy"),np.load("dz1.npy")]
 # # dzErrors=convergenceTest(Cdz,CdzList)
 # # np.save("dzConvergenceErrors.npy",dzErrors)
 # dzErrors=np.load("dzConvergenceErrors.npy")
 # convergencePlot(dzList, dzErrors,"dz")
 # print(dzErrors)
+
+dzM1andRMSconvergence(Cdz, dzList, dz, L, T, 2)
 
 
 """180 days simulation"""

@@ -26,7 +26,7 @@ def test2(L,dt,dz,T):
     K=np.sin(z)*100+1000 #variable K
     Cinit=norm.pdf(z,L/2,L/5) #normal distribution
     C=runSimulation(Cinit,dt,dz,K,0,timesteps,S)
-    massDiff,initMass=massDifference(C)
+    massDiff,initMass=massDifference(C,dz)
     plotMassDifference(massDiff,initMass,T)
     plotConcentrations(C,"test2C")
 
@@ -65,7 +65,7 @@ def test4(L,dt,dz,T,kw):
     z=np.linspace(0,L,N)
     Kvar=np.sin((N/2)*z)+10
     CKvar=runSimulation(Cinit,dt,dz,Kvar,kw,timesteps,S)
-    massesKvar=np.sum(CKvar,axis=1) #gives array with the mass for each time
+    massesKvar=np.sum(CKvar,axis=1)*dz #gives array with the mass for each time
     print("C",len(CKvar))
     #plotConcentrations(CKvar,"funkerikke")
     #plt.matshow(CKvar.T)
@@ -118,7 +118,7 @@ dt=0.1
 T=2000
 timesteps=int(T/dt)
 
-#test2(L,dt,dz,T)
+test2(L,dt,dz,T)
 
 """Test 3"""
 L=30
@@ -132,7 +132,7 @@ timesteps=int(T/dt)
 #test3(L,dt,dz,T)
 
 """Test 4"""
-#kw=0.0000697
+kw=0.0000697
 kw=0.1
 #test4(L,dt,dz,T,kw)
 

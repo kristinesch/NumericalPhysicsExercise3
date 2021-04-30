@@ -50,6 +50,7 @@ def deepSim(T,L,dt,dz,kw,npyFile): #simulation with parameters from problem 3
 dt=1000
 T=1*year
 dz=0.2
+L=4000
 # #deepSim(T,L,dt,dz,kw,"C3dt"+str(dt)+"dz"+str(dz)+".npy")
 # dtList=[5000,10000,50000,100000,500000,1000000,5000000,10000000]
 # for dti in dtList:
@@ -102,9 +103,14 @@ dtList=[10000,50000,100000,500000,1000000,5000000,10000000]
 #calculateConvergenceTestErrors("dt", dtList, "C3dt1000dz0.2.npy",allTimes=False)
 
 
-#dzList=[0.4,0.8,1.6,4,16,40,100,400,1000]
+Cref=np.load("C3dt1000dz0.2.npy")
+#dtM1andRMSconvergence(Cref, dtList, dz, 1000, L, T,3)
+
+
+dzList=[0.4,0.8,1.6,4,16,40,100,400,1000]
 #runConvergenceSimulations("dz", dzList)
 #calculateConvergenceTestErrors("dz", dzList, "C3dt1000dz0.2.npy")
+dzM1andRMSconvergence(Cref, dzList, dz, L, T, 3)
 
 """Full 10 year simulation"""
 L=4000
@@ -122,14 +128,14 @@ print(T/dt)
 deepSimC=np.load("fullDeepSim2.npy")
 #plotConcentrationFor4times(deepSimC, "deepSim", L,[0,2.5*year,5*year,10*year])
 
-timesteps=int(T/dt)
-t=np.linspace(0,T,timesteps)
-deepSimMasses=totalMass(deepSimC, dz)
-plotTotalMass(deepSimMasses, t)
+# timesteps=int(T/dt)
+# t=np.linspace(0,T,timesteps)
+# deepSimMasses=totalMass(deepSimC, dz)
+# plotTotalMass(deepSimMasses, t)
 
-def calculateMassPerYear(masses, years):
-    return (masses[-1]-masses[0])/years
+# def calculateMassPerYear(masses, years):
+#     return (masses[-1]-masses[0])/years
 
-print(deepSimMasses[-1],deepSimMasses[0])
+# print(deepSimMasses[-1],deepSimMasses[0])
 
-print("Average total mass absorbed by the global oceans per year: ", calculateMassPerYear(deepSimMasses, 10))
+# print("Average total mass absorbed by the global oceans per year: ", calculateMassPerYear(deepSimMasses, 10))

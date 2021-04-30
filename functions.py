@@ -2,6 +2,7 @@ import numpy as np
 from numba import jit
 import math
 from scipy.integrate import simps
+from plotting import *
 
 
 """Thomas algorithm"""
@@ -100,10 +101,10 @@ def runSimulation(Cinit,dt,dz,K,kw,timesteps,S):
 
 """Calculating stuff after simulation"""
 
-def massDifference(C): #C is the array returned after simulation
-    mass=np.sum(C,axis=1) 
+def massDifference(C,dz): #C is the array returned after simulation
+    mass=np.sum(C,axis=1)*dz
     initMass=mass[0]
-    return mass-initMass, initMass #returns difference between initial mass and current mass for all timesteps, and the initial mass
+    return np.delete(mass,0)-initMass, initMass #returns difference between initial mass and current mass for all timesteps, and the initial mass
 
 def minAndMaxConcentrations(C):#C is the array returned after simulation
     minC=np.amin(C,axis=1) #minimum value of each column of C
@@ -147,28 +148,81 @@ def convergenceTest(C,CList): #C is an accurate simulation to be compared with
         i+=1
     return errors
 
-def M1andRMSerrors(C,CList,dt_ref, dz,dtList,N,L,T): #only checks last timestep. Integrates over z. 
-    x=int(len(C)/len(CList[0]))
+def dtM1andRMSerrors(C,CList,dtList,N,L,T): #only checks last timestep. Integrates over z. 
     z=np.linspace(0,L,N)
     M1errors=np.zeros(len(dtList)) #to save data
     RMSerrors=np.zeros(len(dtList))
-    M1_ref=simps(C[0]*z,x=z) #simpsons method integration  for reference solution
-    t_ref=np.linspace(0,T,dt_ref)
+    M1_ref=simps(C[-1]*z,x=z) #simpsons method integration  for reference solution,last timestep
+    #t_ref=np.linspace(0,T,dt_ref)
     
     for i,Ci in enumerate(CList):
         #t=np.linspace(0,T,dtList[i]) not needed?
         x=int(len(C)/len(Ci))
-        M1errors[i]=np.abs(M1_ref-simps(Ci[i]*z,x=z)) #error for this dt
-        RMSerrors[i]=np.sqrt(np.mean((Ci-C[::x])**2))
+
+        M1errors[i]=np.abs(M1_ref-simps(Ci[-1]*z,x=z)) #error for this dt, last timestep #Ci is the current array. Look at last element of this array
+        RMSerrors[i]=np.sqrt(np.mean((Ci[-1]-C[-1])**2)) 
         print(i)
     
     return M1errors, RMSerrors
-#RMS_error[i] = np.sqrt(np.mean((C - C_ref)**2))
-#RMS_error = np.zeros(len(timesteps))
+
+
+def dzM1andRMSerrors(C,CList,dzList,N,L,T): #only checks last timestep. Integrates over z. 
+    z=np.linspace(0,L,len(C[-1])) 
+    M1errors=np.zeros(len(dzList)) #to save data
+    RMSerrors=np.zeros(len(dzList))
+    M1_ref=simps(C[-1]*z,x=z) #simpsons method integration  for reference solution,last timestep
+    #t_ref=np.linspace(0,T,dt_ref)
+    #y=int(len(C[0])/len(CList[0]))
+    
+    for i,Ci in enumerate(CList):
+        #t=np.linspace(0,T,dtList[i]) not needed?
+        print(len(C[0]),len(Ci[0]))
+        y=int(len(C[0])/len(Ci[0])) # to get arrays with the same number of elements
+        z_sub=z[::y]
+        print("M1",M1_ref)             #C has dim timesteps*N
+        print(len(Ci[-1]),len(z_sub))
+        M1errors[i]=np.abs(M1_ref-simps(Ci[-1]*z_sub,x=z_sub)) #error for this dt, last timestep #Ci is the current array. Look at last element of this array
+        RMSerrors[i]=np.sqrt(np.mean((Ci[-1]-C[-1,::y])**2)) 
+        print(i)
+    
+    return M1errors, RMSerrors
+
+
+
+
+def dtM1andRMSconvergence(C,dtList,dz,L,T,P): #p is the problem number: 2 or 3
+    CList=[]
+    N=int(L/dz)
+    if P==2:
+        for dti in dtList:
+                CList.append(np.load("dt"+str(dti)+".npy"))   #because i was stupid and made different filename structure for the two problems
+    elif P==3:
+        for dti in dtList:
+                CList.append(np.load("C3dt"+str(dti)+"dz0.2.npy"))
+    M1, RMS =dtM1andRMSerrors(C, CList, dtList,N,L,T)
+    dtplotM1andRMSerrors(M1,RMS, dtList,P)
         
+
+def dzM1andRMSconvergence(C,dzList,dz,L,T,P):
+    CList=[]
+    N=int(L/dz)
+    if P==2:
+        for dzi in dzList:
+            CList.append(np.load("dz"+str(dzi)+".npy"))
+    if P==3:
+        for dzi in dzList:
+            CList.append(np.load("C3dt1000dz"+str(dzi)+".npy"))
+
+    M1, RMS =dzM1andRMSerrors(C, CList, dzList,N,L,T)
+    dzplotM1andRMSerrors(M1,RMS, dzList,P)
 
 def convergenceTestLastTimestep(C,CList): #C is an accurate simulation to be compared with
     errors=[]
     for Ci in CList:
         errors.append(checkMaxErrorLastTimestep(C,Ci))
     return errors
+
+
+
+
+

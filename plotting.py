@@ -31,6 +31,7 @@ def plotMassDifference(massDiff,initMass,T):
     ax.plot(t,massDiff)
     ax.set_xlabel("Time")
     ax.set_ylabel("Difference from initial mass ("+initMassString+")")
+    fig.tight_layout()
     fig.savefig("test2")
 
     plt.show()
@@ -159,12 +160,31 @@ def plotTotalMass(masses,t):
     plt.show()
 
 
-def plotM1andRMSerrors(M1errors,RMSerrors,dtList):
+def dtplotM1andRMSerrors(M1errors,RMSerrors,dtList,P):
     fig,ax=plt.subplots(1,1)
-    ax.plot(dtList,M1errors,label="1st moment")
-    ax.plot(dtList,RMSerrors, label="RMS")
+    ax.plot(dtList,M1errors, linestyle="--", marker="o",color="red",label="1st moment")
+    ax.plot(dtList,RMSerrors,linestyle="--", marker="o", color="orange",label="RMS")
+    ax.plot(dtList,dtList,linestyle="--", marker="o",color="blue",label="dt")
     ax.set_xlabel("dt")
     ax.set_ylabel("Error")
-    fig.legend()
-    fig.savefig("M1errors")
+    ax.set_xscale("log")
+    ax.set_yscale("log")
+    fig.suptitle("Convergence test for dt, problem "+str(P))
+    fig.legend(loc="center right")
+    fig.savefig("Problem"+str(P)+"M1andRMSerrors")
+    plt.show()
+
+def dzplotM1andRMSerrors(M1errors,RMSerrors,dzList,P):
+    fig,ax=plt.subplots(1,1)
+    ax.plot(dzList,M1errors, linestyle="--", marker="o",color="red",label="1st moment")
+    ax.plot(dzList,RMSerrors,linestyle="--", marker="o", color="orange",label="RMS")
+    ax.plot(dzList,np.array(dzList)**2,linestyle="--", marker="o",color="blue",label="dz^2")
+    ax.plot(dzList,dzList,linestyle="--", marker="o",color="darkblue",label="dz")
+    ax.set_xlabel("dz")
+    ax.set_ylabel("Error")
+    ax.set_xscale("log")
+    ax.set_yscale("log")
+    fig.suptitle("Convergence test for dz, problem "+str(P))
+    fig.legend(loc="upper left")
+    fig.savefig("Problem"+str(P)+"M1andRMSerrors for dz")
     plt.show()
